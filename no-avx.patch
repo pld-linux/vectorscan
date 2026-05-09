@@ -1,0 +1,64 @@
+--- vectorscan-vectorscan-5.4.12/cmake/cflags-x86.cmake~	2025-07-22 17:09:14.000000000 +0200
++++ vectorscan-vectorscan-5.4.12/cmake/cflags-x86.cmake	2026-05-09 15:04:36.206681465 +0200
+@@ -31,12 +31,8 @@
+         set(X86_ARCH "x86-64-v2")
+     endif()
+ else()
+-    set(BUILD_AVX512VBMI ON)
+-    set(BUILD_AVX512 ON)
+-    set(BUILD_AVX2 ON)
+     set(ARCH_C_FLAGS "-msse4.2")
+     set(ARCH_CXX_FLAGS "-msse4.2")
+-    set(X86_ARCH "x86-64-v2")
+ endif()
+ 
+ set(CMAKE_REQUIRED_FLAGS "${ARCH_C_FLAGS}")
+--- vectorscan-vectorscan-5.4.12/src/util/arch/x86/cpuid_inline.h~	2025-07-22 17:09:14.000000000 +0200
++++ vectorscan-vectorscan-5.4.12/src/util/arch/x86/cpuid_inline.h	2026-05-09 15:38:28.820015023 +0200
+@@ -98,6 +98,7 @@
+ 
+ static inline
+ int check_avx2(void) {
++#if defined(BUILD_AVX2)
+     unsigned int eax, ebx, ecx, edx;
+ 
+     cpuid(1, 0, &eax, &ebx, &ecx, &edx);
+@@ -124,12 +125,13 @@
+         DEBUG_PRINTF("AVX2 enabled\n");
+         return 1;
+     }
+-
++#endif
+     return 0;
+ }
+ 
+ static inline
+ int check_avx512(void) {
++#if defined(BUILD_AVX512)
+     /*
+      * For our purposes, having avx512 really means "can we use AVX512BW?"
+      */
+@@ -163,12 +165,13 @@
+         DEBUG_PRINTF("AVX512BW instructions enabled\n");
+         return 1;
+     }
+-
++#endif
+     return 0;
+ }
+ 
+ static inline
+ int check_avx512vbmi(void) {
++#if defined(BUILD_AVX512VBMI)
+     unsigned int eax, ebx, ecx, edx;
+ 
+     cpuid(1, 0, &eax, &ebx, &ecx, &edx);
+@@ -204,7 +207,7 @@
+         DEBUG_PRINTF("AVX512VBMI instructions enabled\n");
+         return 1;
+     }
+-
++#endif
+     return 0;
+ }
+ 

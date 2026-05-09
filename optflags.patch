@@ -1,0 +1,22 @@
+--- vectorscan-vectorscan-5.4.12/CMakeLists.txt~	2025-07-22 17:09:14.000000000 +0200
++++ vectorscan-vectorscan-5.4.12/CMakeLists.txt	2026-05-09 15:09:45.506681518 +0200
+@@ -179,19 +179,6 @@
+ message(STATUS "ARCH_C_FLAGS   : ${ARCH_C_FLAGS}")
+ message(STATUS "ARCH_CXX_FLAGS : ${ARCH_CXX_FLAGS}")
+ 
+-if(RELEASE_BUILD)
+-    if (NOT CMAKE_BUILD_TYPE MATCHES MINSIZEREL)
+-        set(OPT_C_FLAG "-O3")
+-        set(OPT_CXX_FLAG "-O3")
+-    else ()
+-        set(OPT_C_FLAG "-Os")
+-        set(OPT_CXX_FLAG "-Os")
+-    endif ()
+-else()
+-    set(OPT_C_FLAG "-O0")
+-    set(OPT_CXX_FLAG "-O0")
+-endif(RELEASE_BUILD)
+-
+ include (${CMAKE_MODULE_PATH}/cflags-generic.cmake)
+ 
+ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})

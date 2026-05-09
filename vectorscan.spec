@@ -2,13 +2,15 @@ Summary:	High-performance regular expression matching library
 Summary(pl.UTF-8):	Biblioteka szybkiego dopasowywania wyrażeń regularnych
 Name:		vectorscan
 Version:	5.4.12
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries
 Source0:	https://github.com/VectorCamp/vectorscan/archive/vectorscan/%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	384eab5b23831993df96e5fa55f9951e
 Patch0:		%{name}-pkgconfig.patch
 Patch1:		size_t-type.patch
+Patch2:		no-avx.patch
+Patch3:		optflags.patch
 URL:		https://github.com/VectorCamp/vectorscan
 BuildRequires:	boost-devel
 BuildRequires:	cmake >= 3.0
@@ -59,6 +61,10 @@ Statyczna biblioteka Vectorscan.
 %setup -q -n %{name}-%{name}-%{version}
 %patch -P0 -p1
 %patch -P1 -p1
+%ifarch %{ix86}
+%patch -P2 -p1
+%endif
+%patch -P3 -p1
 
 %build
 install -d build
@@ -71,6 +77,11 @@ cd build
 	-DBUILD_DOC=OFF \
 	-DBUILD_EXAMPLES=OFF \
 	-DBUILD_UNIT=OFF \
+%ifarch %{ix86}
+	-DBUILD_AVX512VBMI:BOOL=OFF \
+	-DBUILD_AVX512:BOOL=OFF \
+	-DBUILD_AVX2:BOOL=OFF \
+%endif
 	..
 
 %{__make}
